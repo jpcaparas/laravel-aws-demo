@@ -5,7 +5,7 @@ namespace App\Services\Aws;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Illuminate\Http\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class S3UploadService
@@ -92,12 +92,12 @@ class S3UploadService
     }
 
     /**
-     * @param UploadedFile $file
+     * @param File $file
      * @param string       $fileName
      *
      * @return bool
      */
-    public function upload(UploadedFile $file, string $fileName)
+    public function upload(File $file, string $fileName)
     {
         try {
             $response = $this->getClient()->upload(
