@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Aws;
 
+use App\Http\Controllers\Aws\Support\UsesS3;
 use App\Http\Requests\Aws\S3UploadRequest;
 use App\Services\Aws\S3Service;
 use Carbon\Carbon;
@@ -15,14 +16,11 @@ use Illuminate\Http\UploadedFile;
  */
 class S3UploadController extends Controller
 {
-    /**
-     * @var S3Service
-     */
-    private $service;
+    use UsesS3;
 
     public function __construct()
     {
-        $this->setService(new S3Service());
+        $this->setS3(new S3Service());
     }
 
     public function __invoke(S3UploadRequest $request)
@@ -35,7 +33,7 @@ class S3UploadController extends Controller
                     . '_' . str_slug($request->input('file_name'))
                     . '.' . $file->getClientOriginalExtension();
 
-        $s3 = $this->getService();
+        $s3 = $this->getS3();
         $s3->upload($file, $fileName);
         $s3Response = $s3->getLastResponse();
 
@@ -55,21 +53,5 @@ class S3UploadController extends Controller
 
 
         return response()->json($response, $status);
-    }
-
-    /**
-     * @return S3Service
-     */
-    public function getService(): S3Service
-    {
-        return $this->service;
-    }
-
-    /**
-     * @param S3Service $service
-     */
-    public function setService(S3Service $service)
-    {
-        $this->service = $service;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Aws;
 
+use App\Http\Controllers\Aws\Support\UsesS3;
 use App\Services\Aws\S3Service;
 use Illuminate\Http\Response;
 
@@ -12,20 +13,17 @@ use Illuminate\Http\Response;
  */
 class S3DownloadBucketController extends Controller
 {
-    /**
-     * @var S3Service
-     */
-    private $service;
+    use UsesS3;
 
     public function __construct()
     {
-        $this->setService(new S3Service());
+        $this->setS3(new S3Service());
     }
 
     public function __invoke()
     {
         $downloadDir = storage_path('aws/s3/' . config('aws.s3.bucket_name'));
-        $s3 = $this->getService();
+        $s3 = $this->getS3();
         $s3->download($downloadDir);
 
         $response = [
@@ -35,21 +33,5 @@ class S3DownloadBucketController extends Controller
         ];
 
         return response()->json($response, Response::HTTP_OK);
-    }
-
-    /**
-     * @return S3Service
-     */
-    public function getService(): S3Service
-    {
-        return $this->service;
-    }
-
-    /**
-     * @param S3Service $service
-     */
-    public function setService(S3Service $service)
-    {
-        $this->service = $service;
     }
 }
