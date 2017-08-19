@@ -12,5 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(route('aws.s3-upload.index'));
+});
+
+Route::group(['prefix' => 'aws', 'namespace' => 'Aws'], function() {
+    Route::group(['prefix' => 's3'], function() {
+        Route::post('upload', 'S3UploadController')->name('aws.s3.upload.store');
+    });
 });
