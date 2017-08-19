@@ -2,7 +2,6 @@
 
 namespace App\Services\Aws;
 
-use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\File\File;
@@ -13,22 +12,12 @@ use Symfony\Component\HttpFoundation\File\File;
  * @package Services\Aws\S3
  *
  */
-class S3UploadService
+class S3UploadService extends AwsService
 {
     /**
      * @var S3Client
      */
     private $client;
-
-    /**
-     * @var null|Result
-     */
-    private $lastResponse;
-
-    /**
-     * @var null|string
-     */
-    private $lastError;
 
     /**
      * S3UploadService constructor.
@@ -57,38 +46,6 @@ class S3UploadService
     public function setClient(S3Client $client)
     {
         $this->client = $client;
-    }
-
-    /**
-     * @return null|Result
-     */
-    public function getLastResponse()
-    {
-        return $this->lastResponse;
-    }
-
-    /**
-     * @param null|Result $lastResponse
-     */
-    public function setLastResponse($lastResponse)
-    {
-        $this->lastResponse = $lastResponse;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getLastError(): string
-    {
-        return $this->lastError;
-    }
-
-    /**
-     * @param null|string $lastError
-     */
-    public function setLastError($lastError)
-    {
-        $this->lastError = $lastError;
     }
 
     /**
