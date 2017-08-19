@@ -18,5 +18,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'aws', 'namespace' => 'Aws'], function() {
     Route::group(['prefix' => 's3'], function() {
         Route::post('upload', 'S3UploadController')->name('aws.s3.upload.store');
+        Route::post('download_bucket', 'S3DownloadBucketController')->name('aws.s3.download_bucket.store');
     });
 });

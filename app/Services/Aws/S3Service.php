@@ -49,6 +49,8 @@ class S3Service extends AwsService
     }
 
     /**
+     * Upload a file
+     *
      * @param File $file
      * @param string       $fileName
      *
@@ -72,5 +74,25 @@ class S3Service extends AwsService
         }
 
         return true;
+    }
+
+    /**
+     * Download a bucket of files into a directory
+     *
+     * @param string $dir
+     * @param string $prefix
+     *
+     */
+    public function download(string $dir, $prefix = '')
+    {
+        try {
+            $this->getClient()->downloadBucket(
+                $dir,
+                config('aws.s3.bucket_name'),
+                $prefix
+            );
+        } catch (S3Exception $e) {
+            \Log::error('S3 bucket download failed.', $e->getMessage());
+        }
     }
 }
