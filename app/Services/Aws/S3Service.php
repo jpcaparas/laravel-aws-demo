@@ -7,12 +7,12 @@ use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Class S3UploadService
+ * Class S3Service
  *
  * @package Services\Aws\S3
  *
  */
-class S3UploadService extends AwsService
+class S3Service extends AwsService
 {
     /**
      * @var S3Client
@@ -20,7 +20,7 @@ class S3UploadService extends AwsService
     private $client;
 
     /**
-     * S3UploadService constructor.
+     * S3Service constructor.
      */
     public function __construct()
     {

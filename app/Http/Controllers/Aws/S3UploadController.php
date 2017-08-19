@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Aws;
 
 use App\Http\Requests\Aws\S3UploadRequest;
-use App\Services\Aws\S3UploadService;
+use App\Services\Aws\S3Service;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
@@ -16,13 +16,13 @@ use Illuminate\Http\UploadedFile;
 class S3UploadController extends Controller
 {
     /**
-     * @var S3UploadService
+     * @var S3Service
      */
     private $service;
 
     public function __construct()
     {
-        $this->setService(new S3UploadService());
+        $this->setService(new S3Service());
     }
 
     public function __invoke(S3UploadRequest $request)
@@ -58,17 +58,17 @@ class S3UploadController extends Controller
     }
 
     /**
-     * @return S3UploadService
+     * @return S3Service
      */
-    public function getService(): S3UploadService
+    public function getService(): S3Service
     {
         return $this->service;
     }
 
     /**
-     * @param S3UploadService $service
+     * @param S3Service $service
      */
-    public function setService(S3UploadService $service)
+    public function setService(S3Service $service)
     {
         $this->service = $service;
     }
