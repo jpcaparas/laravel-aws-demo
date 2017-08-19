@@ -31,8 +31,8 @@ class S3UploadController extends Controller
          * @var UploadedFile $file
          */
         $file = $request->file('file');
-        $fileName = str_slug($request->input('file_name'))
-                    . '_' . Carbon::now()->timestamp
+        $fileName = Carbon::now()->timestamp
+                    . '_' . str_slug($request->input('file_name'))
                     . '.' . $file->getClientOriginalExtension();
 
         $s3 = $this->getService();
