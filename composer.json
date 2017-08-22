@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.0",
         "aws/aws-sdk-php": "~3.33",
+        "doctrine/dbal": "^2.6",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0"
     },
