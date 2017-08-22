@@ -52,4 +52,14 @@ abstract class AwsService
     {
         $this->lastError = $lastError;
     }
+
+    /**
+     * Check if there is an error
+     *
+     * @return bool
+     */
+    public function hasError()
+    {
+        return is_null($this->lastError) === false;
+    }
 }
