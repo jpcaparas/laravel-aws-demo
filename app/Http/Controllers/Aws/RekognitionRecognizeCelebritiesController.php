@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Aws;
 
-use App\Http\Controllers\Aws\Support\UsesRekognition;
 use App\Http\Requests\Aws\RekognitionRequest;
 use App\Services\Aws\RekognitionService;
 use Illuminate\Http\Response;
@@ -15,25 +14,30 @@ use Illuminate\Http\UploadedFile;
  */
 class RekognitionRecognizeCelebritiesController extends Controller
 {
-    use UsesRekognition;
-
-    public function __construct()
-    {
-        $this->setRekognition(new RekognitionService());
-    }
-
-    public function __invoke(RekognitionRequest $request)
+    public function __invoke(RekognitionRequest $request, RekognitionService $rekognition)
     {
         /**
          * @var UploadedFile $file
          */
         $file = $request->file('file');
 
-        $rekognition = $this->getRekognition();
-        $this->getRekognition()->recognizeCelebrities($file);
+        $rekognition->recognizeCelebrities($file);
+        $rekognitionResponse = $rekognition->getLastResponse();
 
-        return response()->json([
-            'data' => $rekognition->getLastResponse()->toArray()
-        ], Response::HTTP_OK);
+        $status = Response::HTTP_OK;
+
+        if ($rekognitionResponse === null) {
+            $response = [
+                'errors' => [ 'aws' => $rekognition->getLastError() ]
+            ];
+
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+        } else {
+            $response = [
+                'data' => $rekognition->getLastResponse()->toArray(),
+            ];
+        }
+
+        return response()->json($response, $status);
     }
 }

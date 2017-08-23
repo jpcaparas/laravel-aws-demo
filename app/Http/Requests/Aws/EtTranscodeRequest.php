@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Aws;
 
-class S3UploadRequest extends FormRequest
+class EtTranscodeRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,8 +12,8 @@ class S3UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required:max:100',
-            'file' => 'required|file'
+            'name' => 'bail|required|max:100',
+            'file' => 'required|file|mimetypes:video/mp4,',
         ];
     }
 }
