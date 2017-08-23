@@ -12,7 +12,7 @@ class S3UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'file_name' => 'required:max:100',
+            'name' => 'bail|required:max:100',
             'file' => 'required|file'
         ];
     }

@@ -14,21 +14,29 @@ use Symfony\Component\HttpFoundation\File\File;
 class RekognitionService extends AwsService
 {
     /**
+     * @var array
+     */
+    private $config = [];
+
+    /**
      * @var RekognitionClient
      */
     private $client;
 
     /**
-     * S3Service constructor.
+     * @return array
      */
-    public function __construct()
+    public function getConfig(): array
     {
-        $args = [
-            'version' => config('aws.rekognition.version'),
-            'region'  => config('aws.rekognition.region')
-        ];
+        return $this->config;
+    }
 
-        $this->setClient(new RekognitionClient($args));
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
     }
 
     /**
@@ -36,6 +44,10 @@ class RekognitionService extends AwsService
      */
     public function getClient(): RekognitionClient
     {
+        if ($this->client === null) {
+            $this->client = new RekognitionClient($this->getConfig());
+        }
+
         return $this->client;
     }
 

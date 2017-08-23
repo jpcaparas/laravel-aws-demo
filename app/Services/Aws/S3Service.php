@@ -2,8 +2,10 @@
 
 namespace App\Services\Aws;
 
+use App\Services\Aws\Config\S3Config;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -20,16 +22,24 @@ class S3Service extends AwsService
     private $client;
 
     /**
-     * S3Service constructor.
+     * @var S3Config
      */
-    public function __construct()
-    {
-        $args = [
-            'version' => config('aws.s3.version'),
-            'region'  => config('aws.s3.region')
-        ];
+    private $config;
 
-        $this->setClient(new S3Client($args));
+    /**
+     * @return S3Config
+     */
+    public function getConfig(): S3Config
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param S3Config $config
+     */
+    public function setConfig(S3Config $config)
+    {
+        $this->config = $config;
     }
 
     /**
@@ -37,6 +47,17 @@ class S3Service extends AwsService
      */
     public function getClient(): S3Client
     {
+        if ($this->client === null) {
+            $configClass = $this->getConfig();
+
+            $config = [
+                'region' => $configClass->getRegion(),
+                'version' => $configClass->getVersion(),
+            ];
+
+            $this->client = new S3Client($config);
+        }
+
         return $this->client;
     }
 
@@ -51,8 +72,8 @@ class S3Service extends AwsService
     /**
      * Upload a file
      *
-     * @param File $file
-     * @param string       $fileName
+     * @param File   $file
+     * @param string $fileName
      *
      * @return bool
      */
@@ -60,10 +81,10 @@ class S3Service extends AwsService
     {
         try {
             $response = $this->getClient()->upload(
-                config('aws.s3.bucket_name'),
+                $this->getConfig()->getBucketName(),
                 $fileName,
                 $file->openFile(),
-                config('aws.s3.acl')
+                $this->getConfig()->getAcl()
             );
 
             $this->setLastResponse($response);
@@ -88,11 +109,11 @@ class S3Service extends AwsService
         try {
             $this->getClient()->downloadBucket(
                 $dir,
-                config('aws.s3.bucket_name'),
+                $this->getConfig()->getBucketName(),
                 $prefix
             );
         } catch (S3Exception $e) {
-            \Log::error('S3 bucket download failed.', $e->getMessage());
+            Log::error('S3 bucket download failed.', $e->getMessage());
         }
     }
 }

@@ -32,6 +32,6 @@ return [
     // Rekognition
     'rekognition'       => [
         'version' => env('AWS_REKOGNITION_VERSION', 'latest'),
-        'region'  => env('AWS_REKOGNITON_REGION', 'us-west-1')
+        'region'  => env('AWS_REKOGNITION_REGION', 'us-east-1')
     ]
 ];
