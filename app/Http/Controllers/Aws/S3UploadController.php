@@ -16,24 +16,16 @@ use Illuminate\Http\UploadedFile;
  */
 class S3UploadController extends Controller
 {
-    use UsesS3;
-
-    public function __construct()
-    {
-        $this->setS3(new S3Service());
-    }
-
-    public function __invoke(S3UploadRequest $request)
+    public function __invoke(S3UploadRequest $request, S3Service $s3)
     {
         /**
          * @var UploadedFile $file
          */
         $file = $request->file('file');
         $fileName = Carbon::now()->timestamp
-                    . '_' . str_slug($request->input('file_name'))
+                    . '_' . str_slug($request->input('name'))
                     . '.' . $file->getClientOriginalExtension();
 
-        $s3 = $this->getS3();
         $s3->upload($file, $fileName);
         $s3Response = $s3->getLastResponse();
 
@@ -50,7 +42,6 @@ class S3UploadController extends Controller
                 'data' => $s3->getLastResponse()->toArray(),
             ];
         }
-
 
         return response()->json($response, $status);
     }

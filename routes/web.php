@@ -25,4 +25,11 @@ Route::group(['prefix' => 'aws', 'namespace' => 'Aws'], function () {
         Route::post('recognize_celebrities',
             'RekognitionRecognizeCelebritiesController')->name('aws.rekognition.recognize_celebrities');
     });
+
+    Route::group(['prefix' => 'et'], function () {
+        Route::group(['prefix' => 'transcode'], function() {
+            Route::post('/', 'EtTranscodeController')->name('aws.et.transcode');
+            Route::post('subscriber', 'EtTranscodeSubscriberController')->name('aws.et.transcode.subscriber');
+        });
+    });
 });
