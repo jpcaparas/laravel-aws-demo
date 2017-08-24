@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/ngrok-test', function() {
+    return view('ngrok');
+})->name('ngrok.test');
+
 Route::group(['prefix' => 'aws', 'namespace' => 'Aws'], function () {
     Route::group(['prefix' => 's3'], function () {
         Route::post('upload', 'S3UploadController')->name('aws.s3.upload.store');
