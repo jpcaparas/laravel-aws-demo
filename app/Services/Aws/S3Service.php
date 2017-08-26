@@ -2,7 +2,6 @@
 
 namespace App\Services\Aws;
 
-use App\Services\Aws\Config\S3Config;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Log;
@@ -17,56 +16,85 @@ use Symfony\Component\HttpFoundation\File\File;
 class S3Service extends AwsService
 {
     /**
+     * @var array
+     */
+    private $config = [];
+
+    /**
+     * @var string
+     */
+    private $acl;
+
+    /**
+     * @var string
+     */
+    private $bucketName;
+
+    /**
      * @var S3Client
      */
     private $client;
 
     /**
-     * @var S3Config
+     * @return array
      */
-    private $config;
-
-    /**
-     * @return S3Config
-     */
-    public function getConfig(): S3Config
+    public function getConfig(): array
     {
         return $this->config;
     }
 
     /**
-     * @param S3Config $config
+     * @param array $config
      */
-    public function setConfig(S3Config $config)
+    public function setConfig(array $config)
     {
         $this->config = $config;
     }
 
     /**
+     * @return string
+     */
+    public function getAcl(): string
+    {
+        return $this->acl ?? config('aws.s3.acl');
+    }
+
+    /**
+     * @param string $acl
+     */
+    public function setAcl(string $acl)
+    {
+        $this->acl = $acl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBucketName(): string
+    {
+        return $this->bucketName ?? config('aws.s3.bucket_name');
+    }
+
+    /**
+     * @param string $bucketName
+     */
+    public function setBucketName(string $bucketName)
+    {
+        $this->bucketName = $bucketName;
+    }
+
+    /**
      * @return S3Client
+     *
+     * @throws \InvalidArgumentException
      */
     public function getClient(): S3Client
     {
         if ($this->client === null) {
-            $configClass = $this->getConfig();
-
-            $config = [
-                'region' => $configClass->getRegion(),
-                'version' => $configClass->getVersion(),
-            ];
-
-            $this->client = new S3Client($config);
+            $this->client = new S3Client($this->getConfig());
         }
 
         return $this->client;
-    }
-
-    /**
-     * @param S3Client $client
-     */
-    public function setClient(S3Client $client)
-    {
-        $this->client = $client;
     }
 
     /**
@@ -81,10 +109,10 @@ class S3Service extends AwsService
     {
         try {
             $response = $this->getClient()->upload(
-                $this->getConfig()->getBucketName(),
+                $this->getBucketName(),
                 $fileName,
                 $file->openFile(),
-                $this->getConfig()->getAcl()
+                $this->getAcl()
             );
 
             $this->setLastResponse($response);
@@ -109,7 +137,7 @@ class S3Service extends AwsService
         try {
             $this->getClient()->downloadBucket(
                 $dir,
-                $this->getConfig()->getBucketName(),
+                $this->getBucketName(),
                 $prefix
             );
         } catch (S3Exception $e) {
