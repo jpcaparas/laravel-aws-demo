@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property string $name
  * @property string $path
+ * @property string $driver
  * @property string $mime_type
  * @property int $size
  *
@@ -25,9 +26,19 @@ class Media extends Model
     protected $fillable = [
         'name',
         'path',
+        'driver',
         'mime_type',
         'size',
     ];
+
+    /**
+     * Checks if the media is stored locally
+     *
+     * @return bool
+     */
+    public function isLocal() {
+        return empty($this->driver) === true || $this->driver === 'local';
+    }
 
     /**
      * @return HasMany
