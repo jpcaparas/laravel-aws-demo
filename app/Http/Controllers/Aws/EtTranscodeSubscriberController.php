@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Aws;
 
 use App\Models\TranscodingJob;
-use Carbon\Carbon;
+use App\Services\TranscodingJobService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Log;
  */
 class EtTranscodeSubscriberController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, TranscodingJobService $transcodingJobService)
     {
         $payload = json_decode($request->getContent(), true);
 
@@ -29,13 +28,13 @@ class EtTranscodeSubscriberController extends Controller
         $data = json_decode(stripslashes($payload['Message']), true) ?? null;
 
         if (empty($data) === true) {
-            return response(null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendErrors([null]);
         }
 
         $jobId = $data['jobId'] ?? null;
 
         if (empty($jobId) === true) {
-            return response(null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendErrors([null]);
         }
 
         /**
@@ -44,16 +43,15 @@ class EtTranscodeSubscriberController extends Controller
         $job = TranscodingJob::where('job_id', '=', $jobId)->first();
 
         if (empty($job) === true) {
-            return response(null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendErrors([null]);
         }
 
         if (strtolower($data['state']) === 'completed') {
-            $job->completed_at = Carbon::now();
-            $job->saveOrFail();
+            $transcodingJobService->markAsCompleted($job);
 
             // TODO email notification
         }
 
-        return response()->json($payload);
+        return $this->sendResponse($payload);
     }
 }
