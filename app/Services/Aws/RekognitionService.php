@@ -52,14 +52,6 @@ class RekognitionService extends AwsService
     }
 
     /**
-     * @param RekognitionClient $client
-     */
-    public function setClient(RekognitionClient $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
      * Upload a file
      *
      * @param File $file

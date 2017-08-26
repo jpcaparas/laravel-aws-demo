@@ -2,7 +2,6 @@
 
 namespace App\Services\Aws;
 
-use App\Services\Aws\Config\S3Config;
 use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\ElasticTranscoder\Exception\ElasticTranscoderException;
 use Aws\S3\Exception\S3Exception;
@@ -13,7 +12,6 @@ use Symfony\Component\HttpFoundation\File\File;
  *
  * @package App\Services\Aws
  *
- * @see     http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/create-job.html
  */
 class EtService extends AwsService
 {
@@ -59,12 +57,6 @@ class EtService extends AwsService
     public function setS3(S3Service $s3)
     {
         $this->s3 = $s3;
-
-        $s3Config = new S3Config();
-        $s3Config->setRegion(config('aws.et.region'));
-        $s3Config->setBucketName(config('aws.et.bucket_in'));
-
-        $this->s3->setConfig($s3Config);
     }
 
     /**
@@ -77,14 +69,6 @@ class EtService extends AwsService
         }
 
         return $this->client;
-    }
-
-    /**
-     * @param ElasticTranscoderClient $client
-     */
-    public function setClient(ElasticTranscoderClient $client)
-    {
-        $this->client = $client;
     }
 
     /**

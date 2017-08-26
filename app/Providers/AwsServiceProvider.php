@@ -29,39 +29,46 @@ class AwsServiceProvider extends ServiceProvider
     public function register()
     {
         // S3
-        $this->app->bind(S3Service::class, function() {
-            $config = new S3Config();
-
+        $this->app->bind(S3Service::class, function () {
             $s3 = new S3Service();
+
+            $config = [
+                'version' => config('aws.s3.version'),
+                'region'  => config('aws.s3.region')
+            ];
+
             $s3->setConfig($config);
 
             return $s3;
         });
 
         // Rekognition
-        $this->app->bind(RekognitionService::class, function() {
+        $this->app->singleton(RekognitionService::class, function () {
+            $rekognition = new RekognitionService();
+
             $config = [
                 'version' => config('aws.rekognition.version'),
                 'region'  => config('aws.rekognition.region')
             ];
-
-            $rekognition = new RekognitionService();
             $rekognition->setConfig($config);
 
             return $rekognition;
         });
 
         // Elastic Transcoder
-        $this->app->bind(EtService::class, function(Application $app) {
+        $this->app->singleton(EtService::class, function (Application $app) {
             $et = new EtService();
 
-            $config = [
+            $etConfig = [
                 'version' => config('aws.et.version'),
                 'region'  => config('aws.et.region')
             ];
+            $et->setConfig($etConfig);
 
-            $et->setConfig($config);
-            $et->setS3($app->make(S3Service::class));
+            $s3 = $app->make(S3Service::class);
+            $s3->setConfig($etConfig);
+            $s3->setBucketName(config('aws.et.bucket_in'));
+            $et->setS3($s3);
 
             return $et;
         });
