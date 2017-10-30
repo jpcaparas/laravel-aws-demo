@@ -38,6 +38,10 @@ These services (segmented via URIs) are currently available to test:
 - [Ngrok](https://ngrok.com/) - A freemium service used to give your app a public-facing URL. This allows Amazon to send webhooks to your app.
 - [Postman](https://www.getpostman.com/) - A free tool for testing API endpoints. Support sending multipart requests (e.g. file uploads).
 
+## Trying it all out
+
+📘 👉 Head on over to [the wiki](https://github.com/jpcaparas/laravel-aws-demo/wiki).
+
 ## Attributions
 
 ![figured-logo](https://www.figured.com/assets/img/figured-logo@2x.png)
