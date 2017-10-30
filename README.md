@@ -18,4 +18,12 @@ These services (segmented via URIs) are currently available to test:
 
 ## Initial set up
 
-_Coming soon._
+1. Bootstrap the project
+        
+        composer create-project jpcaparas/laravel-aws-demo --prefer-dist
+
+1. Run tests
+        
+        vendor/bin/phpunit
+        
+1. Populate the `.env` file with your AWS credentials. [Sign up for AWS](http://docs.aws.amazon.com/lambda/latest/dg/setting-up.html) if you haven't done so already.
