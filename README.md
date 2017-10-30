@@ -16,6 +16,11 @@ These services (segmented via URIs) are currently available to test:
 |   `POST`    |   `aws/et/transcode`                        |
 |   `POST`    |   `aws/et/transcode/subscriber`             |
 
+## Requirements
+
+1. PHP 7.x
+1. SQLite 3.x
+
 ## Initial set up
 
 1. Bootstrap the project
@@ -31,6 +36,7 @@ These services (segmented via URIs) are currently available to test:
 ##  Additional services used
 
 - [Ngrok](https://ngrok.com/) - A freemium service used to give your app a public-facing URL. This allows Amazon to send webhooks to your app.
+- [Postman](https://www.getpostman.com/) - A free tool for testing API endpoints. Support sending multipart requests (e.g. file uploads).
 
 ## Attributions
 
