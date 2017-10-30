@@ -27,3 +27,15 @@ These services (segmented via URIs) are currently available to test:
         vendor/bin/phpunit
         
 1. Populate the `.env` file with your AWS credentials. [Sign up for AWS](http://docs.aws.amazon.com/lambda/latest/dg/setting-up.html) if you haven't done so already.
+
+##  Additional services used
+
+- [Ngrok](https://ngrok.com/) - A freemium service used to give your app a public-facing URL. This allows Amazon to send webhooks to your app.
+
+## Attributions
+
+![figured-logo](https://www.figured.com/assets/img/figured-logo@2x.png)
+
+I am a developer for [Figured, Ltd](https://www.figured.com), a farm financial management software company headquartered at Victoria Street West, Auckland.
+
+We leverage AWS as part of our development toolchain to offload complexity onto the cloud. This in turn makes us focus on building new features, leading to happy developers and a rapidly evolving product.
