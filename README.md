@@ -26,6 +26,10 @@ These services (segmented via URIs) are currently available to test:
 1. Bootstrap the project
         
         composer create-project jpcaparas/laravel-aws-demo --prefer-dist
+        
+        touch database/database.sqlite
+        
+        php artisan migrate:refresh --seed
 
 1. Run tests
         
