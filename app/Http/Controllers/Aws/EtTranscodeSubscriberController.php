@@ -16,13 +16,17 @@ class EtTranscodeSubscriberController extends Controller
 {
     public function __invoke(Request $request, TranscodingJobService $transcodingJobService)
     {
-        $payload = json_decode($request->getContent(), true);
+        $payload = json_decode($request->getContent(), true) ?? [];
 
-        Log::debug('AWS Elastic Transcoder Payload.', $payload);
+        logger('AWS Elastic Transcoder Payload.', $payload);
 
         // Ping subscription URL (if specified)
         if (isset($payload['SubscribeURL']) === true) {
             file_get_contents($payload['SubscribeURL']);
+        }
+
+        if (empty($payload['Message'])) {
+            return $this->sendResponse($payload);
         }
 
         $data = json_decode(stripslashes($payload['Message']), true) ?? null;
